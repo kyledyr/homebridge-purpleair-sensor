@@ -72,7 +72,7 @@
               "default": true,
               "description": "If checked, the plugin will report temperature as a separate sensor in HomeKit."
             },
-             "vocs": {
+             "voc": {
               "title": "Report VOCs",
               "type": "boolean",
               "default": true,
