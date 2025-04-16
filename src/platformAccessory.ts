@@ -37,6 +37,7 @@ export class PurpleAirPlatformAccessory {
       .onGet(this.getPM2_5Density.bind(this));
     this.service.getCharacteristic(this.platform.Characteristic.VOCDensity)
       .onGet(this.getVOCDensity.bind(this));
+    
     if (this.accessory.context.sensor.humidity) {
       this.service.getCharacteristic(this.platform.Characteristic.CurrentRelativeHumidity)
         .onGet(this.getCurrentRelativeHumidity.bind(this));
@@ -211,17 +212,38 @@ export class PurpleAirPlatformAccessory {
     });
 
     try {
-      let fields = 'voc,pm2.5,pm2.5_cf_1,pm2.5_10minute,pm2.5_30minute,pm2.5_60minute';
+      let fields = '';
+
+      if (platformConfig.averages === 'realtime') {
+        fields += 'pm2.5,';
+      }
+      
+      if (platformConfig.averages === '10m') {
+        fields += 'pm2.5_10minute,';
+      }
+
+      if (platformConfig.averages === '30m') {
+        fields += 'pm2.5_30minute,';
+      }
+      
+      if (platformConfig.averages === '60m') {
+        fields += 'pm2.5_60minute,';
+      }    
+      
       if (sensorConfig.humidity) {
-        fields += ',humidity';
+        fields += 'humidity,';
       }
 
       if (sensorConfig.temperature) {
-        fields += ',temperature';
+        fields += 'temperature,';
       }
 
+       if (sensorConfig.voc) {
+        fields += 'voc,';
+      }
+      
       if (platformConfig.conversion === 'ALT-CF3') {
-        fields += ',pm2.5_alt';
+        fields += 'pm2.5_alt,';
       }
 
       const request_config = {
